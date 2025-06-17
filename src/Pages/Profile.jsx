@@ -30,7 +30,7 @@ const Profile = () => {
   if (!user) {
     return (
       <p>
-        You are not logged in, Redirecting to the Login page begins after{" "}
+        You are not logged in, Redirecting to the Login page begins after
         {countDown}
         seconds...
       </p>
