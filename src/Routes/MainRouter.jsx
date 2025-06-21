@@ -10,6 +10,10 @@ import CreateTemplate from "../Pages/CreateTemplate";
 import NotFound from "../Pages/NotFound";
 import PrivateRoute from "../Components/PrivateRoute";
 import TemplateDetail from "../Pages/TemplateDetail";
+import FormView from "../Pages/FormView";
+import Questions from "../Components/Questions";
+import Answers from "../Components/Answers";
+import Settings from "../Components/Settings";
 
 const MainRouter = () => {
   return (
@@ -49,6 +53,39 @@ const MainRouter = () => {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/form-view"
+        element={
+          <PrivateRoute>
+            <FormView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/questions"
+        element={
+          <PrivateRoute>
+            <Questions />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/answers"
+        element={
+          <PrivateRoute>
+            <Answers />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <Settings />
+          </PrivateRoute>
+        }
+      />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
