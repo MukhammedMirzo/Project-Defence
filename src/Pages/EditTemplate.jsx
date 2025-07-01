@@ -1,25 +1,36 @@
-import React, { useState, useContext } from "react";
-import { useDispatch } from "react-redux";
-import { addTemplate } from "../Slices/formsSlice";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { editTemplate } from "../Slices/formsSlice";
 import { ThemeContext } from "../Context/ThemeContext";
-import { useNavigate } from "react-router-dom";
 
-const CreateTemplate = () => {
+const EditTemplate = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { theme } = useContext(ThemeContext);
-  const navigate = useNavigate();
+
+  const form = useSelector((state) =>
+    state.forms.templates.find((t) => t?.id === id)
+  );
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [questions, setQuestions] = useState([
-    { text: "", type: "short_text" },
-  ]);
-  const [loading, setLoading] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const handleAddQuestion = () => {
-    setQuestions([...questions, { text: "", type: "short_text" }]);
-  };
+  useEffect(() => {
+    if (!form) {
+      setError("Form not found");
+      setLoading(false);
+    } else {
+      setTitle(form.title);
+      setDescription(form.description);
+      setQuestions(form.questions);
+      setLoading(false);
+    }
+  }, [form]);
 
   const handleQuestionChange = (index, value) => {
     const updated = [...questions];
@@ -27,30 +38,29 @@ const CreateTemplate = () => {
     setQuestions(updated);
   };
 
+  const handleAddQuestion = () => {
+    setQuestions([...questions, { text: "", type: "short_text" }]);
+  };
+
   const handleSave = () => {
     if (!title.trim()) {
-      setError("Form title is required.");
-      return;
-    }
-    if (questions.some((q) => !q.text.trim())) {
-      setError("All questions must be filled.");
+      setError("Form title is required");
       return;
     }
 
-    setLoading(true);
-    const newTemplate = {
-      id: Date.now().toString(),
+    const updatedForm = {
+      ...form,
       title,
       description,
       questions,
     };
 
-    dispatch(addTemplate(newTemplate));
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/");
-    }, 800);
+    dispatch(editTemplate(updatedForm));
+    navigate("/");
   };
+
+  if (loading) return <div className="p-6">Loading form...</div>;
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
 
   return (
     <div
@@ -58,9 +68,7 @@ const CreateTemplate = () => {
         theme ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
-      <h1 className="text-2xl font-bold mb-4">Create a New Form</h1>
-
-      {error && <div className="text-red-500 mb-2">{error}</div>}
+      <h1 className="text-2xl font-bold mb-4">Edit Form</h1>
 
       <input
         value={title}
@@ -68,6 +76,7 @@ const CreateTemplate = () => {
         placeholder="Form Title"
         className="w-full p-2 border mb-3"
       />
+
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -94,13 +103,12 @@ const CreateTemplate = () => {
 
       <button
         onClick={handleSave}
-        className="bg-green-500 text-white px-4 py-2 rounded"
-        disabled={loading}
+        className="bg-green-600 text-white px-4 py-2 rounded"
       >
-        {loading ? "Saving..." : "Save Form"}
+        Save Changes
       </button>
     </div>
   );
 };
 
-export default CreateTemplate;
+export default EditTemplate;

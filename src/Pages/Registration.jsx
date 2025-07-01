@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 
 const Registration = () => {
   const { login, user } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -11,6 +12,7 @@ const Registration = () => {
     password: "",
     confirmPassword: "",
   });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -23,13 +25,29 @@ const Registration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
+    const { username, email, password, confirmPassword } = formData;
+
+    if (password !== confirmPassword) {
+      setError("Passworsd do not match!");
+      setLoading(false);
       return;
     }
 
-    login({ username: formData.username, email: formData.email });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Invalid email address");
+      setLoading(false);
+      return;
+    }
+
+    setTimeout(() => {
+      login({ username, email });
+      setLoading(false);
+      navigate("/profile");
+    }, 1000);
   };
 
   if (user) {
@@ -40,18 +58,19 @@ const Registration = () => {
       </div>
     );
   }
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="text-center font-semibold text-amber-600">MyForm</h2>
-        <h2 className="mt-5 text-center text-2xl font-bold ">
+        <h2 className="mt-5 text-center text-2xl font-bold">
           Create your account
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <label htmlFor="username" className=" text-sm font-medium">
+        <form onSubmit={handleSubmit} className="space-y-5" autoComplete="off">
+          <label htmlFor="username" className="text-sm font-medium">
             Username
           </label>
           <input
@@ -60,9 +79,11 @@ const Registration = () => {
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter username"
-            className="w-full rounded-md bg-white px-3 py-2  outline-1  outline-gray-400 placeholder:text-gray-400 focus:outline-1 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm"
+            disabled={loading}
+            className="w-full rounded-md bg-white px-3 py-2 outline-1 outline-gray-400 placeholder:text-gray-400 focus:outline-blue-600 sm:text-sm"
           />
-          <label htmlFor="email" className=" text-sm font-medium">
+
+          <label htmlFor="email" className="text-sm font-medium">
             Email address
           </label>
           <input
@@ -71,47 +92,59 @@ const Registration = () => {
             value={formData.email}
             onChange={handleChange}
             placeholder="Enter your email"
-            className="w-full rounded-md bg-white px-3 py-2  outline-1  outline-gray-400 placeholder:text-gray-400 focus:outline-1 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm"
+            disabled={loading}
+            className="w-full rounded-md bg-white px-3 py-2  outline-1 outline-gray-400 placeholder:text-gray-400 focus:outline-blue-600 sm:text-sm"
           />
 
           <label className="text-sm font-medium">Password</label>
           <input
             name="password"
             type="password"
+            autoComplete="new-password"
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter password"
-            className="w-full rounded-md bg-white px-3 py-2   outline-1  outline-gray-400 placeholder:text-gray-400 focus:outline-1 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm"
+            disabled={loading}
+            className="w-full rounded-md bg-white px-3 py-2  outline-1 outline-gray-400 placeholder:text-gray-400 focus:outline-blue-600 sm:text-sm"
           />
-          <label htmlFor="confirm-passsword" className=" text-sm font-medium">
+
+          <label htmlFor="confirmPassword" className="text-sm font-medium">
             Confirm password
           </label>
           <input
             name="confirmPassword"
             type="password"
-            value={formData.confirmpassword}
+            value={formData.confirmPassword}
             onChange={handleChange}
             placeholder="Confirm password"
-            className="w-full rounded-md bg-white px-3 py-2   outline-1  outline-gray-400 placeholder:text-gray-400 focus:outline-1 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm"
+            disabled={loading}
+            className="w-full rounded-md bg-white px-3 py-2  outline-1 outline-gray-400 placeholder:text-gray-400 focus:outline-blue-600 sm:text-sm"
           />
-          {error && <p>{error}</p>}
+
+          {error && <p className="text-sm text-red-500">{error}</p>}
+
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              disabled={loading}
+              className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-500"
+              }`}
             >
-              Sign Up
+              <span>{loading ? "Creating account..." : "Sign Up"}</span>
             </button>
           </div>
         </form>
 
-        <div className="mt-10 flex items-center justify-between text-sm ">
+        <div className="mt-10 flex items-center justify-between text-sm">
           Already have an account?
           <Link
             to="/login"
             className="font-semibold text-blue-600 hover:text-blue-500 hover:underline"
           >
-            Sing In
+            Sign In
           </Link>
         </div>
       </div>

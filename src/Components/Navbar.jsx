@@ -6,9 +6,9 @@ import { AlignJustify, Search, UserCircle, Sun, Moon, X } from "lucide-react";
 
 const menuLinks = [
   { name: "Home", path: "/" },
-  { name: "Create Form", path: "/create-template" },
-  { name: "Edit templates", path: "/template-detail" },
-  { name: "About", path: "/about" },
+  { name: "Tables", path: "/tables" },
+  { name: "Presentations", path: "/presentations" },
+  { name: "Documents", path: "/documents" },
 ];
 
 const Navbar = () => {
@@ -64,7 +64,7 @@ const Navbar = () => {
         <input
           type="text"
           placeholder="Search forms"
-          className={`pl-10 py-1.5 rounded-3xl border ${
+          className={`w-auto pl-10 py-1.5 rounded-3xl border ${
             theme
               ? "bg-gray-800 text-white border-gray-600"
               : "bg-white text-gray-900 border-gray-300"

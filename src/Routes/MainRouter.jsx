@@ -6,14 +6,18 @@ import Login from "../Pages/Login";
 import Registration from "../Pages/Registration";
 import Profile from "../Pages/Profile";
 import AdminDashboard from "../Pages/AdminDashboard";
+import Tables from "../Pages/Tables";
+import Presentations from "../Pages/Presentations";
+import Documents from "../Pages/Documents";
 import CreateTemplate from "../Pages/CreateTemplate";
-import NotFound from "../Pages/NotFound";
-import PrivateRoute from "../Components/PrivateRoute";
-import TemplateDetail from "../Pages/TemplateDetail";
-import FormView from "../Pages/FormView";
 import Questions from "../Components/Questions";
 import Answers from "../Components/Answers";
 import Settings from "../Components/Settings";
+
+import PrivateRoute from "../Components/PrivateRoute";
+import NotFound from "../Pages/NotFound";
+import EditTemplate from "../Pages/EditTemplate";
+import FillForm from "../Pages/FillForm";
 
 const MainRouter = () => {
   return (
@@ -46,18 +50,42 @@ const MainRouter = () => {
         }
       />
       <Route
-        path="/template-detail"
+        path="/edit-template/:id"
         element={
           <PrivateRoute>
-            <TemplateDetail />
+            <EditTemplate />
           </PrivateRoute>
         }
       />
       <Route
-        path="/form-view"
+        path="/fill-form/:id"
         element={
           <PrivateRoute>
-            <FormView />
+            <FillForm />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/tables"
+        element={
+          <PrivateRoute>
+            <Tables />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/presentations"
+        element={
+          <PrivateRoute>
+            <Presentations />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/documents"
+        element={
+          <PrivateRoute>
+            <Documents />
           </PrivateRoute>
         }
       />
