@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { editTemplate } from "../Slices/formsSlice";
 import { ThemeContext } from "../Context/ThemeContext";
 
 const EditTemplate = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -68,7 +70,7 @@ const EditTemplate = () => {
         theme ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
-      <h1 className="text-2xl font-bold mb-4">Edit Form</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("editForm")}</h1>
 
       <input
         value={title}
@@ -98,14 +100,14 @@ const EditTemplate = () => {
         onClick={handleAddQuestion}
         className="bg-blue-500 text-white px-4 py-2 rounded mr-3"
       >
-        + Add Question
+        {t("addQuestion")}
       </button>
 
       <button
         onClick={handleSave}
         className="bg-green-600 text-white px-4 py-2 rounded"
       >
-        Save Changes
+        {t("saveChanges")}
       </button>
     </div>
   );

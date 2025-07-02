@@ -1,17 +1,25 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import i18n from "../i18n";
+import { useTranslation } from "react-i18next";
 import formLogo from "../assets/Icons/logo-48.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchTherm } from "../Slices/formsSlice";
 import { ThemeContext } from "../Context/ThemeContext";
 import { AlignJustify, Search, UserCircle, Sun, Moon, X } from "lucide-react";
 
 const menuLinks = [
-  { name: "Home", path: "/" },
-  { name: "Tables", path: "/tables" },
-  { name: "Presentations", path: "/presentations" },
-  { name: "Documents", path: "/documents" },
+  { name: "home", path: "/" },
+  { name: "tables", path: "/tables" },
+  { name: "presentations", path: "/presentations" },
+  { name: "documents", path: "/documents" },
 ];
 
 const Navbar = () => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState("");
+  const searchTherm = useSelector((state) => state.forms.searchTherm);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -23,7 +31,7 @@ const Navbar = () => {
         theme ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       } px-2 py-1.5 shadow-xl transition-colors hover:duration-400`}
     >
-      {/* Menu bar , Logo */}
+      {/* Menubar , Logo */}
       <div className="flex items-center gap-x-4">
         <button
           onClick={toggleMenu}
@@ -45,7 +53,7 @@ const Navbar = () => {
               to={item.path}
               className="relative group px-2 py-1 transition-colors duration-300"
             >
-              {item.name}
+              {t(item.name)}
               <span
                 className={`absolute left-0 -bottom-1 h-0.5 w-0 group-hover:w-full transition-all duration-500 ${
                   theme ? "bg-orange-400" : "bg-purple-600"
@@ -58,12 +66,20 @@ const Navbar = () => {
 
       {/* Search input */}
       <div className="relative  lg-block">
-        <button className="absolute top-1/2 left-3 transform -translate-y-1/2 hover:rounded-full hover:text-gray-500 cursor-pointer">
+        <button
+          onClick={() => dispatch(setSearchTherm(""))}
+          className="absolute top-1/2 left-3 transform -translate-y-1/2 hover:rounded-full hover:text-gray-500 cursor-pointer"
+        >
           <Search />
         </button>
         <input
           type="text"
-          placeholder="Search forms"
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            dispatch(setSearchTherm(e.target.value));
+          }}
+          placeholder={t("searchPlaceholder")}
           className={`w-auto pl-10 py-1.5 rounded-3xl border ${
             theme
               ? "bg-gray-800 text-white border-gray-600"
@@ -74,6 +90,14 @@ const Navbar = () => {
 
       {/* Theme and Profile */}
       <div className="flex items-center gap-x-3">
+        <select
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+          value={i18n.language}
+        >
+          <option value="uz">Uz</option>
+          <option value="ru">Ru</option>
+          <option value="en">En</option>
+        </select>
         <button
           className={`rounded-full cursor-pointer ${
             theme ? "hover:text-yellow-400" : "hover:text-purple-700"

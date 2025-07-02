@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 
 const Login = () => {
+  const { t } = useTranslation();
   const { login, user } = useAuth();
   const navigate = useNavigate();
 
@@ -49,9 +51,7 @@ const Login = () => {
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="text-center font-semibold text-amber-600">MyForm</h2>
-        <h2 className="mt-5 text-center text-2xl font-bold ">
-          Sign in to your account
-        </h2>
+        <h2 className="mt-5 text-center text-2xl font-bold ">{t("signIn")}</h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

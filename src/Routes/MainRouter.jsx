@@ -68,7 +68,7 @@ const MainRouter = () => {
         }
       />
       <Route
-        path="/form/:id"
+        path="/fill-form/:id"
         element={
           <PrivateRoute>
             <FormAnswer />
