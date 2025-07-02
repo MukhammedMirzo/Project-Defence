@@ -44,9 +44,19 @@ const Registration = () => {
     }
 
     setTimeout(() => {
-      login({ username, email });
+      const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      const isAdmin = email === "admin@gmail.com";
+
+      allUsers.push({
+        username,
+        email,
+        isAdmin,
+      });
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
+      login({ username, email, isAdmin: email === "admin@gmail.com" });
       setLoading(false);
-      navigate("/profile");
+      navigate(isAdmin ? "/admin-dashboard" : "/profile");
     }, 1000);
   };
 

@@ -1,14 +1,14 @@
-import React, { Children } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 
-const ProtectedRoute = ({ children }) => {
+const AdminRoute = ({ children }) => {
   const { user } = useAuth();
 
-  if (!user) {
+  if (!user || !user.isAdmin) {
     return <Navigate to="/login" replace />;
   }
   return children;
 };
 
-export default ProtectedRoute;
+export default AdminRoute;

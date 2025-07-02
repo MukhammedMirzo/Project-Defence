@@ -14,10 +14,12 @@ import Questions from "../Components/Questions";
 import Answers from "../Components/Answers";
 import Settings from "../Components/Settings";
 
-import PrivateRoute from "../Components/PrivateRoute";
+import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
 import NotFound from "../Pages/NotFound";
 import EditTemplate from "../Pages/EditTemplate";
-import FillForm from "../Pages/FillForm";
+import FormAnswer from "../Pages/FormAnswer";
+import ViewAnswers from "../Pages/ViewAnswers";
 
 const MainRouter = () => {
   return (
@@ -36,9 +38,9 @@ const MainRouter = () => {
       <Route
         path="/admin-dashboard"
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminDashboard />
-          </PrivateRoute>
+          </AdminRoute>
         }
       />
       <Route
@@ -58,18 +60,27 @@ const MainRouter = () => {
         }
       />
       <Route
-        path="/fill-form/:id"
+        path="/form/:id"
         element={
           <PrivateRoute>
-            <FillForm />
+            <FormAnswer />
           </PrivateRoute>
         }
       />
       <Route
-        path="/tables"
+        path="/form/:id"
         element={
           <PrivateRoute>
-            <Tables />
+            <FormAnswer />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/view-answers"
+        element={
+          <PrivateRoute>
+            <ViewAnswers />
           </PrivateRoute>
         }
       />

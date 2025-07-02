@@ -34,6 +34,9 @@ const Home = () => {
                   {form.title}
                 </Link>
                 <p className="text-sm text-gray-600">{form.description}</p>
+
+                <Link to={`/form/${form.id}`}>Fill this form</Link>
+                <Link to={`/view-answers`}>View answers</Link>
               </li>
             );
           })}

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useAuth } from "../Context/AuthContext";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -16,18 +16,35 @@ const Login = () => {
     setError("");
     setLoading(true);
 
-    if (!email.trim() && password.trim().length >= 4) {
+    if (!email.trim() && password.trim().length < 4) {
       setError("Please enter a valid emmail and password");
       setLoading(false);
       return;
     }
 
     setTimeout(() => {
-      login({ username: email });
+      const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      const foundUser = allUsers.find((u) => u.email === email);
+      if (!foundUser) {
+        setError("user not found");
+        setLoading(false);
+        return;
+      }
+
+      const isAdmin = foundUser.isAdmin;
+
+      login({ username: email, email, isAdmin });
       setLoading(false);
-      navigate("/profile");
+      navigate(isAdmin ? "/admin-dashboard" : "/profile");
     }, 1000);
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate(user.isAdmin ? "/admin-dashboard" : "/profile");
+    }
+  }, [user, navigate]);
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
